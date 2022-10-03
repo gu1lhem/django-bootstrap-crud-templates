@@ -3,10 +3,16 @@
 {% load bscttags %}
 
 {% block BSCT_CSS %}
-<link href='{% bootstrap_cdn %}' rel='stylesheet' type='text/css'/>
+{% load static %}
+<link rel = "stylesheet" type = "text/css" href = "{% static 'datatables.min.css' %}"/>
+<link rel = "stylesheet" type = "text/css" href = "{% static 'style.css' %}"/>
+
+<script src="{% static 'datatables.min.js' %}"></script>
+
 {% endblock %}
 
 {% block BSCT_MAIN %}
+    <h2>{% block BSCT_TITLE %}{% endblock %}</h2>
 
     {% block BSCT_CONTENT %}
     {% endblock %}

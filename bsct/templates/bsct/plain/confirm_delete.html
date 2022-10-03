@@ -1,36 +1,62 @@
 {% extends 'bsct/base.html' %}
- 
+
+{% load bscttags %}
+
+{% block BSCT_TITLE %}
+    Confirmer la suppression : <em>{{object}}</em>
+{% endblock %}
+
 {% block BSCT_CONTENT %}
-<form
-    action = ""
-    method = "post"
->
-    {% csrf_token %}
+    <form action="" method="post">
+        {% csrf_token %}
 
-    {% block BSCT_WARNING %}
+        {% block BSCT_WARNING %}
 
-        {% block BSCT_WARNING_ALERT %}
-        <h3 class = ''>
-            Are you you sure you want to delete "{{object}}"? 
-        </h3>
+            {% with object|get_delete_detail as d %}
+                {% block BSCT_WARNING_ALERT %}
+                    <h3 class=''>
+                        Etes-vous sûr de vouloir supprimer l'objet "{{object}}"? 
+                    </h3>
+                {% endblock %}
+
+                <p>
+                    {% if d.items %}
+                        Cela entraînera la suppression de ces objets :
+                        <table class = 'table table-condensed'>
+                        
+                            {% for field,value in d.items %}
+                                <p>
+                                    <tr>      
+                                        <td>
+                                            {% block BSCT_DETAIL_FIELDS_FIELD %}
+                                                <strong> {{ field }} </strong>
+                                            {% endblock %}
+                                        </td>
+
+                                        <td>
+                                            {% block BSCT_DETAIL_FIELDS_VALUE %}
+                                                {{ value|safe }}
+                                            {% endblock %}
+                                        </td>
+                                    </tr>
+                                </p>
+                            {% endfor %}
+                        </table> 
+                    {% endif %}
+                
+                </p>
+            {% endwith %}
+            
+
+            {% block BSCT_WARNING_OPTS %}
+            <input class='btn btn-warning' type='submit' value='Oui'/> 
+
+            <a class='btn' href='{{object.get_absolute_url}}'>
+                Non
+            </a>
+            {% endblock %}
+
         {% endblock %}
 
-        {% block BSCT_WARNING_OPTS %}
-        <input 
-            class = 'btn btn-warning'
-            type  = 'submit' 
-            value = 'Yes' 
-        />
-
-        <a
-            class = 'btn'
-            href  = '{{object.get_absolute_url}}'
-        >
-            No
-        </a>
-        {% endblock %}
-
-    {% endblock %}
-
-</form>
+    </form>
 {% endblock %}

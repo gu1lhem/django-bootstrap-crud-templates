@@ -2,11 +2,11 @@
  
 {% load bscttags %}
 
-{% block BSCT_CONTENT %}
-
 {% block BSCT_TITLE %}
-<h2> Create {% get_verbose_name form.instance %} </h2>
+    Création : {% get_verbose_name form.instance %}
 {% endblock %}
+
+{% block BSCT_CONTENT %}
 
 <form 
     action  = ''
@@ -33,7 +33,7 @@
             class = 'btn btn-success' 
         />
 
-        {% if form.instance.get_list_url %}
+        {% if form.instance.get_list_url is not None %}
             <a 
                 class = 'btn btn-default'
                 href  = '{{form.instance.get_list_url}}'

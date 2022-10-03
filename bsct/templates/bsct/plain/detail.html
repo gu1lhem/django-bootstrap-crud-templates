@@ -1,83 +1,84 @@
 {% extends 'bsct/base.html' %}
  
 {% load bscttags %}
+{% load tags %}
+
+{% block BSCT_TITLE %}
+    Détails : {{ object|get_class_name }} <em>{{object}}</em>
+{% endblock %}
 
 {% block BSCT_CONTENT %}
 
-{% block BSCT_TITLE %}
-<h2> {{object}} </h2>
-{% endblock %}
+    {% block BSCT_DETAIL_FIELDS %}
 
-{% block BSCT_DETAIL_FIELDS %}
+        <table class = 'table table-condensed' >
+            {% with object|get_detail as d %}
 
-<table class = 'table table-condensed' >
-{% with object|get_detail as d %}
+                {% for field,value in d.items %}
+                    <tr>
+                        <td>
+                            {% block BSCT_DETAIL_FIELDS_FIELD %}
+                                <strong> {{ field }} </b>
+                            {% endblock %}
+                        </td>
 
-    {% for field,value in d.items %}
-    <tr>
-        <td>
-            {% block BSCT_DETAIL_FIELDS_FIELD %}
-            <b> {{ field }} </b>
-            {% endblock %}
-        </td>
+                        <td>
+                            {% block BSCT_DETAIL_FIELDS_VALUE %}
+                                {{ value|safe }}
+                            {% endblock %}
+                        </td>
+                    </tr>
+                {% endfor %}
 
-        <td>
-            {% block BSCT_DETAIL_FIELDS_VALUE %}
-            {{ value }}
-            {% endblock %}
-        </td>
-    </tr>
-    {% endfor %}
+            {% endwith %}
+        </table>
 
-{% endwith %}
-</table>
+        {% block BSCT_DETAIL_FIELDS_EXTRA %}
+        {% endblock %}
 
-{% block BSCT_DETAIL_FIELDS_EXTRA %}
-{% endblock %}
-
-{% endblock %}
+    {% endblock %}
 
 
-{% block BSCT_DETAIL_ACTIONS %}
+    {% block BSCT_DETAIL_ACTIONS %}
 
-{% block BSCT_DETAIL_ACTIONS_EDIT %}
-{% if object.get_update_url %}
-    <a 
-        class = 'btn btn-info'
-        href  = '{{object.get_update_url}}'
-    >
-        Edit
-    </a>
-{% endif %}
-{% endblock %}
+        {% block BSCT_DETAIL_ACTIONS_EDIT %}
+            {% if object.get_update_url is not None %}
+                <a 
+                    class = 'btn btn-info'
+                    href  = '{{object.get_update_url}}'
+                >
+                    Modifier
+                </a>
+            {% endif %}
+        {% endblock %}
 
-{% block BSCT_DETAIL_ACTIONS_DELETE %}
-{% if object.get_delete_url %}
-    <a 
-        class = 'btn btn-warning'
-        href  = '{{object.get_delete_url}}'
-    >
-        Delete
-    </a>
-{% endif %}
-{% endblock %}
+        {% block BSCT_DETAIL_ACTIONS_DELETE %}
+            {% if object.get_delete_url is not None %}
+                <a 
+                    class = 'btn btn-info'
+                    href  = '{{object.get_delete_url}}'
+                >
+                    Supprimer
+                </a>
+            {% endif %}
+        {% endblock %}
 
-{% block BSCT_DETAIL_ACTIONS_LIST %}
+        {% block BSCT_DETAIL_ACTIONS_LIST %}
 
-{% if object.get_list_url %}
-    <a 
-        class = 'btn btn-default'
-        href  = '{{ object.get_list_url }}'
-    >
-        Listing
-    </a>
-{% endif %}
+            {% if object.get_list_url is not None %}
+                <a 
+                    class = 'btn btn-info'
+                    href  = '{{ object.get_list_url }}'
+                >
+                    Liste
+                </a>
+            {% endif %}
 
-{% endblock %}
+        {% endblock %}
 
-{% block BSCT_DETAIL_ACTIONS_EXTRA %}
-{% endblock %}
+        {% block BSCT_DETAIL_ACTIONS_EXTRA %}
+        {% endblock %}
 
-{% endblock %}
+    {% endblock %}
 
 {% endblock %}

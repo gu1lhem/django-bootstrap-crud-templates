@@ -1,0 +1,45 @@
+body{
+    height: 100vh;
+}
+
+header {
+    width: 100%;
+    height: 100vh;
+
+}
+.mtop {
+    margin-top: 25 !important;
+}
+
+.mid {
+    text-align: center;
+}
+
+.footmid {
+    margin: 7% 15%;
+    text-align: center;
+}
+
+.talles{
+    font-size: 4rem;
+}
+
+.tab{
+    width: 200px ;
+}
+.tableft{
+    text-align: left;
+}
+
+.footcol{
+    color:white;
+    border:black;
+}
+.connecttab{
+    position: sticky;
+
+}
+
+.strong {
+    font-weight: bold;
+}

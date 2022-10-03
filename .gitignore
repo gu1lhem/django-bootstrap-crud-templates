@@ -6,3 +6,4 @@ clean
 demo/demo.db
 deploy
 demo/venv*/
+env/
