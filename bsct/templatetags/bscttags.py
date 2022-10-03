@@ -12,6 +12,16 @@ logger = logging.getLogger(logger_name)
 
 register = Library()
 
+@register.filter(name="get_class_name")
+def get_class_name(value):
+    """
+    Return the class name of an object.
+    Source: https://stackoverflow.com/a/14291795
+    """
+    try:
+        return value.__class__._meta.verbose_name
+    except Exception:
+        return value.__class__.__name__
 
 @register.simple_tag
 def get_verbose_name(instance):
