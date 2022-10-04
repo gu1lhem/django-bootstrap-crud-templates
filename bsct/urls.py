@@ -124,7 +124,7 @@ class URLGenerator(object):
             view = bsct_views.ListView.as_view(model=self.model, **kwargs)
 
         return re_path(
-            r"%s/(list/?)?$" % self.bsct_view_prefix,
+            r"%s(s?)/(list/?)?$" % self.bsct_view_prefix,
             view,
             name="%s_list" % self.bsct_view_prefix,
         )
