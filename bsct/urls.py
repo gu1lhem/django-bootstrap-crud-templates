@@ -29,6 +29,14 @@ class URLGenerator(object):
         self.bsct_view_prefix = bsct_view_prefix or model.__name__.lower()
         self.set_form_class(form_class)
 
+        # Set the theorectical template base directory.
+        # This is used to check if a template is overridden by the user.
+        self.template_base_dir = os.path.join(
+            settings.BASE_DIR,
+            self.model._meta.app_label,
+            "templates",
+            self.model.__name__.lower())
+
     def set_form_class(self, form_class=None):
         """
         Sets the form class to be used by the create and update views.
@@ -45,11 +53,10 @@ class URLGenerator(object):
         Generate the create URL for the model.
         """
 
-        override_template = self.model.__name__.lower() + "/create.html"
         if os.path.exists(
-            os.path.join(settings.TEMPLATES[0]["DIRS"][0], override_template)
+            os.path.join(self.template_base_dir, "create.html")
         ):
-            kwargs["template_name"] = override_template
+            kwargs["template_name"] = self.model.__name__.lower() + "/create.html"
 
         form_class = form_class if form_class else self.form_class
 
@@ -75,11 +82,10 @@ class URLGenerator(object):
         Generate the update URL for the model.
         """
 
-        override_template = self.model.__name__.lower() + "/update.html"
         if os.path.exists(
-            os.path.join(settings.TEMPLATES[0]["DIRS"][0], override_template)
+            os.path.join(self.template_base_dir, "update.html")
         ):
-            kwargs["template_name"] = override_template
+            kwargs["template_name"] = self.model.__name__.lower() + "/update.html"
 
         form_class = form_class if form_class else self.form_class
 
@@ -105,11 +111,10 @@ class URLGenerator(object):
         Generate the list URL for the model.
         """
 
-        override_template = self.model.__name__.lower() + "/list.html"
         if os.path.exists(
-            os.path.join(settings.TEMPLATES[0]["DIRS"][0], override_template)
+            os.path.join(self.template_base_dir, "list.html")
         ):
-            kwargs["template_name"] = override_template
+            kwargs["template_name"] = self.model.__name__.lower() + "/list.html"
 
         if login_required:
             view = login_required_decorator(
@@ -129,11 +134,10 @@ class URLGenerator(object):
         Generate the delete URL for the model.
         """
 
-        override_template = self.model.__name__.lower() + "/delete.html"
         if os.path.exists(
-            os.path.join(settings.TEMPLATES[0]["DIRS"][0], override_template)
+            os.path.join(self.template_base_dir, "delete.html")
         ):
-            kwargs["template_name"] = override_template
+            kwargs["template_name"] = self.model.__name__.lower() + "/delete.html"
 
         if login_required:
             view = login_required_decorator(
@@ -161,11 +165,10 @@ class URLGenerator(object):
         Generate the detail URL for the model.
         """
 
-        override_template = self.model.__name__.lower() + "/detail.html"
         if os.path.exists(
-            os.path.join(settings.TEMPLATES[0]["DIRS"][0], override_template)
+            os.path.join(self.template_base_dir, "detail.html")
         ):
-            kwargs["template_name"] = override_template
+            kwargs["template_name"] = self.model.__name__.lower() + "/detail.html"
 
         if login_required:
             view = login_required_decorator(
