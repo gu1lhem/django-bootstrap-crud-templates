@@ -5,6 +5,8 @@ from django.conf import settings
 from django.db import models
 from django.template import Library
 
+from django.urls.exceptions import NoReverseMatch
+
 # Get the logger name from the user's settings.
 logger_name = getattr(settings, "BSCT_LOGGER_NAME", "bsct")
 
@@ -118,15 +120,19 @@ def get_detail(instance):
                 value = value.strftime("%Y-%m-%d %H:%M:%S")
 
             elif field.is_relation:
+                
                 relation_verbose = getattr(field.related_model._meta, "verbose_name")
                 if getattr(field, "multiple", False):
                     # If the field is a relation to a many-to-many field
 
                     # Get the related objects and generate links.
                     rset = getattr(instance, "%s_set" % field.name)
-                    value = [
-                        f"<a href={i.get_absolute_url()}>{i}</a>" for i in rset.all()
-                    ]
+                    value = []
+                    for i in rset.all():
+                        try:
+                            value.append(f"<a href={i.get_absolute_url()}>{i}</a>")
+                        except NoReverseMatch:
+                            value.append(str(i).strip('<>'))
 
                     # Try to get the plural verbose name of the related model if any,
                     # and if there is multiple relations.
@@ -153,7 +159,6 @@ def get_detail(instance):
             if field.is_relation:
                 if relation_verbose:
                     details[relation_verbose] = value
-
                 else:
                     details[field.name] = value
             elif verbose:
@@ -167,8 +172,7 @@ def get_detail(instance):
                 details[field.name] = value
 
         except Exception as exception:
-            logger.warning("Error getting field %s: %s", field, exception)
-
+            logger.warning("Error getting field %s: %s (%s)", field, exception, exception.__class__)
     return details
 
 
