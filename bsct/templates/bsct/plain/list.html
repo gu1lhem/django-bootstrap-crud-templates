@@ -8,6 +8,7 @@
 
 {% block BSCT_CONTENT %}
 
+
     {% block BSCT_LIST_ITEMS %}
         <table id = "table" class = 'table table-striped'>
 
@@ -72,26 +73,6 @@
             </div>
         {% endif %}
     {% endblock %}
-
-    {% block BSCT_BOTTON_ACTIONS %}
-        <div class= "text-end">
-            <a 
-                class = 'btn btn-info'
-                href  = '{% url "configuration_delete_file" %}'
-            >
-                Modifier
-            </a>
-            
-            <a 
-                
-                class = 'btn btn-danger'
-                href  = '{% url "configuration_delete_file" %}'
-            >
-                Supprimer
-            </a>
-        </div>
-
-    {% endblock %}
     
     {% block BSCT_LIST_PAGINATION %}
         {% include 'bsct/plain/paginator.html' %}
@@ -100,62 +81,65 @@
 {% endblock %}
 
 {% block bottom %}
-    <script type = "text/javascript">
+    {% if not is_paginated %}
+        {# Either the list is paginated by DataTables, or by BSCT (with BSCT, is_paginated is True). #}
+        <script type = "text/javascript">
 
-        $(function () {
-            $('#delete').submit(function(event) {
-            event.preventDefault();
+            $(function () {
+                $('#delete').submit(function(event) {
+                event.preventDefault();
 
-            selected_values = [];
-            table = $('#table').DataTable(); // Get datatable object
-            selected = table.rows( { selected: true } ).data(); // Get selected rows
-            for (i = 0; i < selected.length; i++) { // For each selected row (< selected.length : last element's index)
-                selected_values.push(selected[i]); // Push the value of the first column (model name)
-            }
-            // Get the last part of the current url
-            current_url = window.location.pathname.replace("/", "").replace("/", "")
+                selected_values = [];
+                table = $('#table').DataTable(); // Get datatable object
+                selected = table.rows( { selected: true } ).data(); // Get selected rows
+                for (i = 0; i < selected.length; i++) { // For each selected row (< selected.length : last element's index)
+                    selected_values.push(selected[i]); // Push the value of the first column (model name)
+                }
+                // Get the last part of the current url
+                current_url = window.location.pathname.replace("/", "").replace("/", "")
 
-            var actionUrl = $(this).attr('action');
-            var formData = $(this).serialize();
+                var actionUrl = $(this).attr('action');
+                var formData = $(this).serialize();
 
 
-            $.ajax({
-                url: actionUrl,
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                'current_url': current_url,
-                'selected': JSON.stringify(selected_values),
-                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                $.ajax({
+                    url: actionUrl,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                    'current_url': current_url,
+                    'selected': JSON.stringify(selected_values),
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                }).done(function() {
+                    location.href = "{{ request.get_full_path|safe }}";
+                }).fail(function() {
+                    location.href = "{{ request.get_full_path|safe }}";
+                });
+                });
+            });
+
+            {% load static %}
+
+            $(document).ready(function(){
+                $('#table').DataTable( {
+                dom: 'lBfrtip',
+                buttons: [
+                    'copyHtml5', 'excelHtml5', 'pdfHtml5', 'selectAll', 'selectNone'
+                ],
+                lengthMenu: [
+                    [ 10, 25, 50, -1 ],
+                    [ '10', '25', '50', 'toutes les' ]
+                ],
+                select: { /* allows you to select - Permet de faire la sélection */
+                    style: 'multi' /* Select Mode : multi, https://datatables.net/extensions/select/ */
                 },
-            }).done(function() {
-                location.href = "{{ request.get_full_path|safe }}";
-            }).fail(function() {
-                location.href = "{{ request.get_full_path|safe }}";
+                language: {
+                    url: "{% static 'dataTables.french.json' %}"
+                },
+                order: [[2, 'desc']]
+                } );
             });
-            });
-        });
-
-        {% load static %}
-
-        $(document).ready(function(){
-            $('#table').DataTable( {
-            dom: 'lBfrtip',
-            buttons: [
-                'copyHtml5', 'excelHtml5', 'pdfHtml5', 'selectAll', 'selectNone'
-            ],
-            lengthMenu: [
-                [ 10, 25, 50, -1 ],
-                [ '10', '25', '50', 'toutes les' ]
-            ],
-            select: { /* allows you to select - Permet de faire la sélection */
-                style: 'multi' /* Select Mode : multi, https://datatables.net/extensions/select/ */
-            },
-            language: {
-                url: "{% static 'dataTables.french.json' %}"
-            },
-            order: [[2, 'desc']]
-            } );
-        });
-    </script>
+        </script>
+    {% endif %}
 {% endblock %}
