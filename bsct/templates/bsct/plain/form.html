@@ -3,7 +3,7 @@
 {% load bscttags %}
 
 {% block BSCT_TITLE %}
-    Création : {% get_verbose_name form.instance %}
+    Création/Modification : {% get_verbose_name form.instance %}
 {% endblock %}
 
 {% block BSCT_CONTENT %}
@@ -28,7 +28,7 @@
     <div class='actions'>
         {% block BSCT_FORM_ACTIONS %}
         <input
-            value = 'Save'
+            value = 'Sauvegarder'
             type  = 'submit' 
             class = 'btn btn-success' 
         />
@@ -38,7 +38,7 @@
                 class = 'btn btn-default'
                 href  = '{{form.instance.get_list_url}}'
             >
-                Back
+                Retour
             </a>
         {% endif %}
         {% endblock %}
