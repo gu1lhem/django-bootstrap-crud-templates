@@ -21,8 +21,8 @@ Les templates d'un modèle peuvent être redéfinis en créant un répertoire `t
 ## Redéfinition des vues
 
 Les vues d'un modèle peuvent être redéfinies en créant une classe dans le fichier `views.py` de votre projet Django. 
-Par exemple, pour le modèle `Person` si l'on veut redéfinir la vue de création, on créé `PersonCreateView(bsct.views.CreateView)`. Elle serra détectée au chargement de l'application. On pourrait alors surcharger des méthodes, comme `get_context_data()` pour ajouter du contexte supplémentaire à la vue, par exemple.
-Attention : il n'est pas possible de définir à la fois l'attribut `fields` dans la classe, et l'argument `form_class` à l'`URLGenerator` de `BSCT`.
+Par exemple, pour le modèle `Person` si l'on veut redéfinir la vue de création, on créé `PersonCreateView(bsct.views.CreateView)`. Elle serra détectée au chargement de l'application. On pourrait alors redéfinir des méthodes, comme `get_context_data()` pour ajouter du contexte supplémentaire à la vue, par exemple.
+Attention : il n'est pas possible de définir l'attribut `fields` dans la classe. Il faut donc créer un `Form` dans `forms.py` et le passer à l'`URLGenerator` de `BSCT` par l'argument l'argument `form_class` ; ou bien redéfinir la méthode `get_allowed_fields()` du modèle.
 
 ## Mise à jour
 
