@@ -18,6 +18,12 @@ Voir le fichier `README.rst` ou [le dépôt GitHub](https://github.com/Alem/djan
 
 Les templates d'un modèle peuvent être redéfinis en créant un répertoire `templates` dans le répertoire principal de votre projet Django. Ce répertoire doit contenir un sous-répertoire `app` avec app le nom de votre application, et un sous-répertoire `model` avec model le nom de votre modèle. Par exemple, pour le modèle `Person` de l'application `peoples`, le répertoire doit être `templates/people/person`. Les templates redéfinis doivent avoir le même nom que les templates de BSCT, c'est-à-dire `create.html`, `detail.html`, `delete.html`, `update.html` et `list.html`. Ils sont détectés au chargement de l'application.
 
+## Redéfinition des vues
+
+Les vues d'un modèle peuvent être redéfinies en créant une classe dans le fichier `views.py` de votre projet Django. 
+Par exemple, pour le modèle `Person` si l'on veut redéfinir la vue de création, on créé `PersonCreateView(bsct.views.CreateView)`. Elle serra détectée au chargement de l'application. On pourrait alors surcharger des méthodes, comme `get_context_data()` pour ajouter du contexte supplémentaire à la vue, par exemple.
+Attention : il n'est pas possible de définir à la fois l'attribut `fields` dans la classe, et l'argument `form_class` à l'`URLGenerator` de `BSCT`.
+
 ## Mise à jour
 
 Pour mettre à jour les librairies de [Datatables](https://datatables.net/download/), les télécharger depuis le site de DataTables en sélectionnant les options ci-dessous, puis remplacer les fichiers dans `static/DataTables/`. Le choix est fait de ne pas utiliser de CDNs pour augmenter la résilience et car la bande passante n'est pas limitée.
